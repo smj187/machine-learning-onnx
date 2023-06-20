@@ -1,5 +1,10 @@
+import { expose } from "comlink"
 import { imageBlur } from "./image-blur"
 
-export const BlurImageFunc = (data, blurValue) => {
-  return imageBlur(data, blurValue)
+const api = {
+  BlurImageFunc(data, blurValue) {
+    return imageBlur(data, blurValue)
+  },
 }
+
+expose(api)
