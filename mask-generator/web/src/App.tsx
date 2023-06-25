@@ -43,7 +43,7 @@ class CustomImage extends fabric.Image {
             if (this.canvas) {
               this.opacity = 1
               this.canvas.renderAll() // Ensure the canvas is re-rendered once the mask is applied
-
+              this.scale(0.75)
               // const createEl = document.createElement("a")
               // createEl.href = this.toDataURL({ format: "png" })
               // createEl.download = `image.png`
@@ -411,8 +411,21 @@ function App() {
       renderOnAddRemove: true
     })
 
-    const image = "/dogs.jpg"
+    const image = "/product.jpg"
     const mask = "/mask.png"
+
+    // fabric.Image.fromURL("/mask_0.png", function (img) {
+    //   img.filters.push(
+    //     new fabric.Image.filters.RemoveColor({
+    //       threshold: 0.2,
+    //       color: "#FFFFFF"
+    //     })
+    //   )
+
+    //   img.applyFilters()
+    //   canvas.add(img)
+    // })
+
     CustomImage.fromURL(image, img => {
       const w = canvas.width ?? window.innerWidth
       const h = canvas.height ?? window.innerHeight
@@ -427,7 +440,9 @@ function App() {
         maskUrl: mask,
         name: "_image",
         left: w / 2 - (imgWidth * scale) / 2,
-        top: h / 2 - (imgHeight * scale) / 2
+        top: h / 2 - (imgHeight * scale) / 2,
+        scaleX: 0.75,
+        scaleY: 0.75
       })
 
       img.selectable = false
