@@ -414,45 +414,42 @@ function App() {
     const image = "/product.jpg"
     const mask = "/mask.png"
 
-    // fabric.Image.fromURL("/mask_0.png", function (img) {
-    //   img.filters.push(
-    //     new fabric.Image.filters.RemoveColor({
-    //       threshold: 0.2,
-    //       color: "#FFFFFF"
-    //     })
-    //   )
-
-    //   img.applyFilters()
-    //   canvas.add(img)
-    // })
-
-    CustomImage.fromURL(image, img => {
-      const w = canvas.width ?? window.innerWidth
-      const h = canvas.height ?? window.innerHeight
-      const maxWidth = w * 0.8
-      const maxHeight = h * 0.8
-      const imgWidth = img.width ?? 1
-      const imgHeight = img.height ?? 1
-      const scale = Math.min(maxWidth / imgWidth, maxHeight / imgHeight)
-
+    fabric.Image.fromURL(image, function (img) {
       img.set({
-        opacity: 0,
-        maskUrl: mask,
-        name: "_image",
-        left: w / 2 - (imgWidth * scale) / 2,
-        top: h / 2 - (imgHeight * scale) / 2,
-        scaleX: 0.75,
-        scaleY: 0.75
+        selectable: false
       })
-
-      img.selectable = false
-      // img.stroke = "white"
-      // img.strokeWidth = 2
-      img.hoverCursor = "default"
-
+      img.scale(0.5)
+      canvas.centerObject(img)
       canvas.add(img)
-      canvas.renderAll()
     })
+
+    // CustomImage.fromURL(image, img => {
+    //   const w = canvas.width ?? window.innerWidth
+    //   const h = canvas.height ?? window.innerHeight
+    //   const maxWidth = w * 0.8
+    //   const maxHeight = h * 0.8
+    //   const imgWidth = img.width ?? 1
+    //   const imgHeight = img.height ?? 1
+    //   const scale = Math.min(maxWidth / imgWidth, maxHeight / imgHeight)
+
+    //   img.set({
+    //     opacity: 0,
+    //     maskUrl: mask,
+    //     name: "_image",
+    //     left: w / 2 - (imgWidth * scale) / 2,
+    //     top: h / 2 - (imgHeight * scale) / 2,
+    //     scaleX: 0.75,
+    //     scaleY: 0.75
+    //   })
+
+    //   img.selectable = false
+    //   // img.stroke = "white"
+    //   // img.strokeWidth = 2
+    //   img.hoverCursor = "default"
+
+    //   canvas.add(img)
+    //   canvas.renderAll()
+    // })
     canvas.on("mouse:down", options => {
       // if (isDrawing.current && options.pointer) {
       //   const { x, y } = options.pointer
@@ -525,7 +522,22 @@ function App() {
 
     canvas.on("mouse:move", options => {})
 
-    canvas.on("mouse:up", options => {})
+    canvas.on("mouse:up", options => {
+      const dataUrl = canvas.toDataURL({
+        format: "png",
+        quality: 1
+      })
+
+      // Create a link to download the mask
+      const link = document.createElement("a")
+      link.download = "mask.png"
+      link.href = dataUrl
+      link.click()
+    })
+
+    canvas.isDrawingMode = true
+    canvas.freeDrawingBrush.color = "white"
+    canvas.freeDrawingBrush.width = 50
 
     fabricCanvas.current = canvas
   }, [])
@@ -586,6 +598,21 @@ function App() {
     })
   }
 
+  function handleExport() {
+    if (!fabricCanvas.current) return
+
+    const dataUrl = fabricCanvas.current.toDataURL({
+      format: "png",
+      quality: 1
+    })
+
+    // Create a link to download the mask
+    const link = document.createElement("a")
+    link.download = "mask.png"
+    link.href = dataUrl
+    link.click()
+  }
+
   return (
     <Box minH="100vh" w="100%" bg="blackAlpha.900" position="relative">
       {/* <VStack align="start" position="absolute" top="4" left="2" zIndex="4">
@@ -621,7 +648,7 @@ function App() {
         </Button>
       </VStack> */}
 
-      <Button
+      {/* <Button
         position="absolute"
         top="2"
         left="2"
@@ -650,6 +677,16 @@ function App() {
         top="24"
         left="50"
         onClick={exportMask}
+      >
+        export mask
+      </Button> */}
+
+      <Button
+        onClick={handleExport}
+        position="absolute"
+        top="2"
+        left="2"
+        zIndex="2"
       >
         export mask
       </Button>
