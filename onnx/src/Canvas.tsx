@@ -10,7 +10,7 @@ export const Canvas: React.FC<{ samScale: number }> = ({ samScale }) => {
   const {
     clicks: [clicks, setClicks],
     image: [image, setImage],
-    maskImg: [maskImg, setMaskImg]
+    maskImg: [maskImg, setMaskImg],
   } = useContext(AppContext)!
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -29,7 +29,7 @@ export const Canvas: React.FC<{ samScale: number }> = ({ samScale }) => {
       width: window.innerWidth,
       height: window.innerHeight,
       selection: true,
-      renderOnAddRemove: true
+      renderOnAddRemove: true,
     })
 
     const handleMouseMove = _.throttle((e: fabric.IEvent<MouseEvent>) => {
@@ -67,7 +67,7 @@ export const Canvas: React.FC<{ samScale: number }> = ({ samScale }) => {
         hoverCursor: "default",
         scaleX: samScale,
         scaleY: samScale,
-        selectable: false
+        selectable: false,
       })
 
       fabricCanvas.add(img)
@@ -112,4 +112,3 @@ export const Canvas: React.FC<{ samScale: number }> = ({ samScale }) => {
     </Box>
   )
 }
-
