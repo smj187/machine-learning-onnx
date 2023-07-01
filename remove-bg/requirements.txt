@@ -1,0 +1,7 @@
+numpy
+Pillow
+onnx
+onnxruntime
+torch
+torchvision
+rembg
