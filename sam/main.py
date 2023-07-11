@@ -17,8 +17,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
 sam = sam_model_registry["default"](checkpoint="sam_vit_h_4b8939.pth")
+sam.to(device=device)
 predictor = SamPredictor(sam)
+
+@app.get("/")
+def test():
+    return "hello world"
 
 @app.post("/sam", response_class=StreamingResponse)
 async def sam(image: UploadFile = File(...)):
